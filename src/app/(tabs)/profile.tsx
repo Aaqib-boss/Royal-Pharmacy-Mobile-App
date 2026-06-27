@@ -260,7 +260,7 @@ export default function ProfileScreen() {
   // Avatar Image Source calculation
   const getAvatarSource = () => {
     if (user?.profilePhoto) {
-      return { uri: `${BACKEND_URL}${user.profilePhoto}` };
+      return { uri: user.profilePhoto.startsWith('data:') ? user.profilePhoto : `${BACKEND_URL}${user.profilePhoto}` };
     }
     return null;
   };
