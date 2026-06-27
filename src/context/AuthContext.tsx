@@ -32,7 +32,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const storedUser = await AsyncStorage.getItem('user');
         if (storedToken && storedUser) {
           setToken(storedToken);
-          setUserState(JSON.parse(storedUser));
+          const parsedUser = JSON.parse(storedUser);
+          setUserState(parsedUser);
+
+          // Fetch latest user details (like updated profile photo) from database
+          const { data } = await api.get('/auth/profile');
+          const mergedUser = { ...parsedUser, ...data };
+          setUserState(mergedUser);
+          await AsyncStorage.setItem('user', JSON.stringify(mergedUser));
         }
       } catch (error) {
         console.error('Error loading session:', error);
