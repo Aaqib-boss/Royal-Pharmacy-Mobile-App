@@ -50,6 +50,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loadSession();
   }, []);
 
+  // Real-time synchronization loop (polls database every 3 seconds for photo updates)
+  useEffect(() => {
+    if (!user) return;
+
+    const intervalId = setInterval(async () => {
+      try {
+        const { data } = await api.get('/auth/profile');
+        if (user.profilePhoto !== data.profilePhoto) {
+          setUserState((currentUser: any) => {
+            if (currentUser) {
+              const updated = { ...currentUser, ...data };
+              AsyncStorage.setItem('user', JSON.stringify(updated));
+              return updated;
+            }
+            return currentUser;
+          });
+        }
+      } catch (err) {
+        // Silent catch for session expiry/logout
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [user]);
+
   // Axios global response interceptor for 401 Unauthorized
   useEffect(() => {
     const interceptor = api.interceptors.response.use(

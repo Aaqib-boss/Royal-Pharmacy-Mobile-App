@@ -18,6 +18,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 import api from '../../utils/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -90,14 +91,20 @@ export default function ProfileScreen() {
       mediaTypes: 'images',
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.8,
+      quality: 0.5,
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const selectedUri = result.assets[0].uri;
       setPhotoUploading(true);
       try {
-        await updateProfilePhoto(selectedUri);
+        // Resize and compress on device for instant upload and sync
+        const manipulated = await ImageManipulator.manipulateAsync(
+          selectedUri,
+          [{ resize: { width: 150, height: 150 } }],
+          { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        await updateProfilePhoto(manipulated.uri);
         Alert.alert('Success', 'Profile photo updated successfully!');
       } catch (err: any) {
         console.error('Photo upload error:', err);
