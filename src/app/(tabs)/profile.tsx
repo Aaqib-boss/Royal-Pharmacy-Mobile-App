@@ -24,7 +24,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const BACKEND_URL = 'https://web-based-royal-pharmacy-system.onrender.com';
 
 export default function ProfileScreen() {
-  const { user, updateProfilePhoto, deleteProfilePhoto, logout, deleteAccount } = useAuth();
+  const { user, updateProfilePhoto, deleteProfilePhoto, logout, deleteAccount, setUser } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   const [photoUploading, setPhotoUploading] = useState(false);
@@ -43,6 +43,19 @@ export default function ProfileScreen() {
   const [formRole, setFormRole] = useState<'Admin' | 'User'>('User');
   const [formPhone, setFormPhone] = useState('');
   const [formAddress, setFormAddress] = useState('');
+
+  // Refresh self profile on mount
+  useEffect(() => {
+    const refreshProfile = async () => {
+      try {
+        const { data } = await api.get('/auth/profile');
+        setUser({ ...user, ...data });
+      } catch (err) {
+        console.log('Failed to refresh profile:', err);
+      }
+    };
+    refreshProfile();
+  }, []);
 
   const fetchUsers = async () => {
     if (user?.role !== 'Admin') return;
