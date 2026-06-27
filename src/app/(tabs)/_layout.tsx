@@ -3,10 +3,12 @@ import { Tabs, Redirect } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabsLayout() {
   const { theme } = useTheme();
   const { user, loading } = useAuth();
+  const insets = useSafeAreaInsets();
 
   if (loading) {
     return null;
@@ -33,8 +35,8 @@ export default function TabsLayout() {
           backgroundColor: theme === 'dark' ? '#0f172a' : '#ffffff',
           borderTopWidth: 1,
           borderTopColor: theme === 'dark' ? '#1e293b' : '#f1f5f9',
-          height: 60,
-          paddingBottom: 8,
+          height: 64 + insets.bottom,
+          paddingBottom: insets.bottom > 0 ? insets.bottom + 4 : 8,
           paddingTop: 8,
         },
         tabBarActiveTintColor: '#10b981', // emerald-500
