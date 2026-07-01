@@ -766,7 +766,7 @@ export default function ChequesScreen() {
       >
         <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            behavior="padding"
             className="flex-1"
           >
           <View

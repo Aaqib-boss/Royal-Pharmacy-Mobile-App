@@ -546,7 +546,7 @@ export default function DataMasterScreen() {
         onRequestClose={() => setShowModal(false)}
       >
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior="padding"
           className="flex-1"
         >
           <View className="flex-1 justify-end bg-slate-950 bg-opacity-60">

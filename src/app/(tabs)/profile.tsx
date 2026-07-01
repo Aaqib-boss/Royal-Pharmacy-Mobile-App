@@ -469,7 +469,7 @@ export default function ProfileScreen() {
         onRequestClose={() => setShowUserModal(false)}
       >
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior="padding"
           className="flex-1"
         >
           <View className="flex-1 justify-end bg-slate-950 bg-opacity-60">
@@ -637,7 +637,7 @@ export default function ProfileScreen() {
         onRequestClose={() => setShowDeleteModal(false)}
       >
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior="padding"
           className="flex-1"
         >
           <View className="flex-1 justify-center items-center bg-slate-950 bg-opacity-70 p-6">
