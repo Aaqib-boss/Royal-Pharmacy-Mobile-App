@@ -30,6 +30,11 @@ export default function ProfileScreen() {
 
   const [photoUploading, setPhotoUploading] = useState(false);
   
+  // Self Account Delete Modal State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [confirmText, setConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  
   // Admin-only States
   const [usersList, setUsersList] = useState<any[]>([]);
   const [adminLoading, setAdminLoading] = useState(false);
@@ -137,47 +142,29 @@ export default function ProfileScreen() {
   };
 
   const handleSelfDelete = () => {
-    Alert.alert(
-      'Delete My Account',
-      'WARNING: This will permanently delete your account and all associated pharmacy return ledgers, cash payments, cheques, and custom master directories. This action cannot be undone.\n\nType DELETE to confirm.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Proceed',
-          style: 'destructive',
-          onPress: () => {
-            Alert.prompt(
-              'Confirm Deletion',
-              'Please type DELETE to confirm account deletion:',
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Delete Account',
-                  style: 'destructive',
-                  onPress: async (text?: string) => {
-                    if (text === 'DELETE') {
-                      try {
-                        const res = await deleteAccount();
-                        if (res.success) {
-                          Alert.alert('Success', 'Your account has been deleted.');
-                        } else {
-                          Alert.alert('Error', res.message);
-                        }
-                      } catch (err) {
-                        Alert.alert('Error', 'Failed to delete account.');
-                      }
-                    } else {
-                      Alert.alert('Error', 'Verification failed. Account was not deleted.');
-                    }
-                  },
-                },
-              ],
-              'plain-text'
-            );
-          },
-        },
-      ]
-    );
+    setConfirmText('');
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDeleteAccount = async () => {
+    if (confirmText !== 'DELETE') {
+      Alert.alert('Error', 'Please type DELETE exactly to confirm.');
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await deleteAccount();
+      if (res.success) {
+        setShowDeleteModal(false);
+        Alert.alert('Success', 'Your account has been deleted.');
+      } else {
+        Alert.alert('Error', res.message);
+      }
+    } catch (err) {
+      Alert.alert('Error', 'Failed to delete account.');
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // User Admin Form Actions
@@ -637,6 +624,71 @@ export default function ProfileScreen() {
                 </Pressable>
               </View>
 
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+
+      {/* Self Account Delete Confirmation Modal (Cross-platform Android/iOS fix) */}
+      <Modal
+        visible={showDeleteModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowDeleteModal(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          className="flex-1"
+        >
+          <View className="flex-1 justify-center items-center bg-slate-950 bg-opacity-70 p-6">
+            <View className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-100 dark:border-slate-800 p-6 w-full max-w-sm shadow-xl">
+              <View className="items-center mb-4">
+                <View className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950 bg-opacity-35 items-center justify-center mb-3">
+                  <Ionicons name="warning-outline" size={24} color="#ef4444" />
+                </View>
+                <Text className="text-lg font-bold text-slate-800 dark:text-slate-100 text-center">
+                  Delete My Account?
+                </Text>
+              </View>
+
+              <Text className="text-xs text-slate-500 dark:text-slate-400 text-center leading-5 mb-5">
+                WARNING: This will permanently delete your account and all associated pharmacy return ledgers, cash payments, cheques, and custom master directories. This action cannot be undone.
+              </Text>
+
+              <Text className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-2">
+                Type <Text className="text-red-500 font-extrabold">DELETE</Text> to confirm:
+              </Text>
+              <TextInput
+                value={confirmText}
+                onChangeText={setConfirmText}
+                placeholder="Type DELETE"
+                placeholderTextColor="#94a3b8"
+                autoCapitalize="characters"
+                className="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 text-sm focus:border-red-500 mb-6 text-center font-bold"
+              />
+
+              <View className="flex-row gap-3">
+                <Pressable
+                  onPress={() => setShowDeleteModal(false)}
+                  disabled={deleting}
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-800 items-center justify-center active:bg-slate-50 dark:active:bg-slate-850 disabled:opacity-50"
+                >
+                  <Text className="text-slate-600 dark:text-slate-400 text-sm font-semibold">Cancel</Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleConfirmDeleteAccount}
+                  disabled={confirmText !== 'DELETE' || deleting}
+                  className={`flex-1 py-3 rounded-xl items-center justify-center ${
+                    confirmText === 'DELETE' ? 'bg-red-500 active:bg-red-600' : 'bg-red-300 dark:bg-red-950 opacity-40'
+                  }`}
+                >
+                  {deleting ? (
+                    <ActivityIndicator size="small" color="#ffffff" />
+                  ) : (
+                    <Text className="text-white text-sm font-bold">Delete</Text>
+                  )}
+                </Pressable>
+              </View>
             </View>
           </View>
         </KeyboardAvoidingView>
