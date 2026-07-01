@@ -4,6 +4,12 @@ A secure, premium companion mobile application built with **React Native (Expo)*
 
 ---
 
+## 📥 Download APK
+
+[⬇️ Download Latest APK](https://expo.dev/artifacts/eas/sLSb-6BWwhOD3zRXHrY4KYlpFd7Dq5sfpEm0yCWMT0A.apk)
+
+---
+
 ## ✨ Key Features
 
 * 📦 **Product Returns Ledger**: Log expired, damaged, or wrong product delivery returns directly from pharmacies with dedicated reason lists.
@@ -42,27 +48,27 @@ A secure, premium companion mobile application built with **React Native (Expo)*
 ### 🔧 Installation & Local Run
 
 1. **Navigate to the Project Directory**:
-   ```bash
+```bash
    cd C:\Users\USER\Desktop\royal-pharmacy-mobile
-   ```
+```
 
 2. **Install Dependencies**:
-   ```bash
+```bash
    npm install
-   ```
+```
 
 3. **Verify API Configuration**:
-   Open [src/utils/api.ts](file:///C:/Users/USER/Desktop/royal-pharmacy-mobile/src/utils/api.ts) and verify the `baseURL` points to your backend:
-   ```typescript
+   Open [src/utils/api.ts](src/utils/api.ts) and verify the `baseURL` points to your backend:
+```typescript
    // Example configuration (use your active server URL)
    baseURL: 'https://web-based-royal-pharmacy-system.vercel.app/api'
-   ```
+```
 
 4. **Start the Expo Development Server**:
    Run the dev command on a dedicated port (e.g., `8085`) to avoid port conflicts:
-   ```bash
+```bash
    npx expo start --port 8085 --clear
-   ```
+```
 
 5. **Scan & Open in Expo Go**:
    * Open the **Expo Go** app on your phone.
@@ -76,14 +82,14 @@ A secure, premium companion mobile application built with **React Native (Expo)*
 The project is fully configured to compile standalone `.apk` or `.aab` bundles through Expo Application Services (EAS):
 
 1. Make sure you are logged into your Expo account:
-   ```bash
+```bash
    npx eas-cli login
-   ```
+```
 
 2. Start the compilation build:
-   ```bash
+```bash
    npx eas-cli build --platform android --profile preview
-   ```
+```
 
 3. Once compiled, Expo will provide a QR code and a direct link to download the `.apk` package to your Android device.
 
