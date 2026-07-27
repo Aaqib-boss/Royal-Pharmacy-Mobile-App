@@ -6,7 +6,7 @@ A secure, premium companion mobile application built with **React Native (Expo)*
 
 ## 📥 Download APK
 
-[⬇️ Download Latest APK](https://expo.dev/accounts/hilme/projects/royal-pharmacy-mobile/builds/8adc3d76-68cf-479a-b51b-570efc69ba55)
+[⬇️ Download Latest APK](https://expo.dev/accounts/hilme/projects/royal-pharmacy-mobile/builds/64c11d4f-8a5d-4dcd-a0ff-b0ecc80f265f)
 
 ---
 
